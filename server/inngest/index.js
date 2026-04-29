@@ -69,12 +69,14 @@ const syncUserDeletion = inngest.createFunction(
 
 // inngest function to send reminder when a new connection request is added
 const sendNewConnectionRequestReminder = inngest.createFunction(
-    { id : "send-new-connection-request-reminder"},
-    { event: "app/connection-request"},
-    async({event , step}) =>{
-        const {connectionId} = event.data;
+    {
+        id: 'send-new-connection-request-reminder',
+        triggers: [{ event: 'app/connection-request' }]
+    },
+    async ({ event, step }) => {
+        const { connectionId } = event.data;
 
-        await step.run('send-connection-request-email', async () =>{
+        await step.run('send-connection-request-email', async () => {
             const connection = await Connection.findById(connectionId).populate('from_user_id to_user_id');
             const subject = `👋 New Connection Request`;
             const body = `
@@ -95,10 +97,10 @@ const sendNewConnectionRequestReminder = inngest.createFunction(
         })
         const in24Hours = new Date(Date.now() + 24 * 60 * 60 * 1000)
         await step.sleepUntil("wait-for-24-hours", in24Hours);
-        await step.run('send-connection-request-reminder', async () =>{
+        await step.run('send-connection-request-reminder', async () => {
             const connection = await Connection.findById(connectionId).populate('from_user_id to_user_id');
-            if (connection.status === "accepted"){
-                return {message: "Already Accepted"}
+            if (connection.status === "accepted") {
+                return { message: "Already Accepted" }
             }
 
             const subject = `👋 New Connection Request`;
@@ -118,7 +120,7 @@ const sendNewConnectionRequestReminder = inngest.createFunction(
                 body
             })
 
-            return {message : "Reminder sent"}
+            return { message: "Reminder sent" }
         })
     }
 )
