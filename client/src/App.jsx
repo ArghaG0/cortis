@@ -11,16 +11,24 @@ import Profile from './pages/Profile'
 import CreatePost from './pages/CreatePost'
 import {useUser, useAuth} from '@clerk/clerk-react'
 import {Toaster} from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { fetchUser } from './features/user/userSlice'
 
 const App = () => {
   const {user} = useUser()
   const {getToken} = useAuth()
 
+  const dispatch = useDispatch()
+
   useEffect(() => {
-    if(user){
-      getToken().then((token) => console.log(token))
+    const fetchData = async () => {
+      if (user) {
+        const token = await getToken()
+        dispatch(fetchUser(token))
+      }
     }
-  } , [user])
+    fetchData()
+  }, [user, getToken, dispatch])
 
   return (
     <>
