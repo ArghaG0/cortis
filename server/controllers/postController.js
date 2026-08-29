@@ -30,7 +30,7 @@ export const addPost= async (req,res) => {
                             { width: '1280' }
                         ]
                     })
-                    return url
+                    return { url, fileId: response.fileId }
 
                 })
             )
@@ -86,6 +86,70 @@ export const likePost= async (req,res) => {
         }
 
         
+    } catch (error) {
+        console.log(error);
+        res.json({success: false, message: error.message});
+    }
+}
+
+// Edit post
+export const editPost = async (req, res) => {
+    try {
+        const {userId} = req.auth();
+        const {postId} = req.params;
+        const {content} = req.body;
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.json({success: false, message: 'Post not found'});
+        }
+
+        if (post.user !== userId) {
+            return res.json({success: false, message: 'Not authorized to edit this post'});
+        }
+
+        post.content = content;
+        post.isEdited = true;
+        await post.save();
+        await post.populate('user');
+
+        res.json({success: true, message: 'Post updated successfully', post});
+    } catch (error) {
+        console.log(error);
+        res.json({success: false, message: error.message});
+    }
+}
+
+// Delete post
+export const deletePost = async (req, res) => {
+    try {
+        const {userId} = req.auth();
+        const {postId} = req.params;
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.json({success: false, message: 'Post not found'});
+        }
+
+        if (post.user !== userId) {
+            return res.json({success: false, message: 'Not authorized to delete this post'});
+        }
+
+        // Cleanup ImageKit
+        if (post.image_urls && post.image_urls.length > 0) {
+            for (const img of post.image_urls) {
+                if (img.fileId) {
+                    try {
+                        await imagekit.deleteFile(img.fileId);
+                    } catch (err) {
+                        console.log(`Failed to delete fileId ${img.fileId} from ImageKit:`, err.message);
+                    }
+                }
+            }
+        }
+
+        await Post.findByIdAndDelete(postId);
+        res.json({success: true, message: 'Post deleted successfully'});
     } catch (error) {
         console.log(error);
         res.json({success: false, message: error.message});

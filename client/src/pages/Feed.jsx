@@ -27,6 +27,14 @@ const Feed = () => {
     }
     setLoading(false)
   }
+  const handlePostDeleted = (deletedPostId) => {
+    setfeeds(prev => prev.filter(p => p._id !== deletedPostId));
+  }
+
+  const handlePostUpdated = (updatedPost) => {
+    setfeeds(prev => prev.map(p => p._id === updatedPost._id ? { ...p, ...updatedPost } : p));
+  }
+
   useEffect(() => {
     fetchFeeds()
   },[])
@@ -38,7 +46,7 @@ const Feed = () => {
         <StoriesBar/>
         <div className='p-4 space-y-6'>
           {feeds.map((post) => (
-            <PostCard key={post._id} post={post} />
+            <PostCard key={post._id} post={post} onPostDeleted={handlePostDeleted} onPostUpdated={handlePostUpdated} />
           ))}
         </div>
       </div>
