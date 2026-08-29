@@ -1,6 +1,6 @@
-# PingUp
+# Cortis
 
-PingUp is a full-stack social media web application designed to connect users through real-time messaging, content sharing, and interactive stories. The platform features robust user authentication, a feed for multimedia posts, an ephemeral stories system, and a comprehensive connection (follow/friend) mechanism with background email notifications.
+Cortis is a full-stack social media web application designed to connect users through real-time messaging, content sharing, and interactive stories. The platform features robust user authentication, a feed for multimedia posts, an ephemeral stories system, and a comprehensive connection (follow/friend) mechanism with background email notifications.
 
 ---
 
@@ -56,7 +56,7 @@ Based on the implemented frontend components and backend routes, the application
 ## 📁 Folder/Project Structure
 
 ```text
-PingUp/
+Cortis/
 ├── client/                     # Frontend React (Vite) Application
 │   ├── .env                    # Client environment variables
 │   ├── package.json            # Client dependencies and scripts
@@ -159,7 +159,7 @@ The application uses Mongoose to interact with MongoDB. Below are the implemente
 - `email`: String, required
 - `full_name`: String, required
 - `username`: String, unique
-- `bio`: String, default: 'Hey there ! I am using PingUp.'
+- `bio`: String, default: 'Hey there ! I am using Cortis.'
 - `profile_picture`: String, default empty
 - `cover_photo`: String, default empty
 - `location`: String, default empty
