@@ -89,7 +89,7 @@ const StoryModal = ({setShowModal, fetchStories}) => {
     <div className='fixed inset-0 z-110 min-h-screen bg-black/80 backdrop-blur text-white flex items-center justify-center p-4'>
         <div className='w-full max-w-md'>
             <div className='text-center mb-4 flex items-center justify-between'>
-                <button onClick={() => setShowModal(false)} className='text-white p-2 cursor-pointer'>
+                <button onClick={() => setShowModal(false)} className='text-white p-2 cursor-pointer select-none'>
                     <ArrowLeft/>
                 </button>
                 <h2 className='text-lg font-semibold'>Create Story</h2>
@@ -112,12 +112,12 @@ const StoryModal = ({setShowModal, fetchStories}) => {
             
             <div className='flex mt-4 gap-2'>
                 {bgColors.map((color) => (
-                    <button key={color} className='w-6 h-6 rounded-full ring cursor-pointer' style={{backgroundColor: color}} onClick={() => setBackground(color)}/>
+                    <button key={color} className='w-6 h-6 rounded-full ring cursor-pointer select-none' style={{backgroundColor: color}} onClick={() => setBackground(color)}/>
                 ))}
             </div>
 
             <div className='flex gap-2 mt-4'>
-                <button onClick={() => {setMode('text'); setMedia(null); setPreviewUrl(null)}} className={`flex-1 flex items-center justify-center gap-2 p-2 rounded cursor-pointer ${mode === 'text' ? "bg-white text-black" : "bg-zinc-800"}`}>
+                <button onClick={() => {setMode('text'); setMedia(null); setPreviewUrl(null)}} className={`flex-1 flex items-center justify-center gap-2 p-2 rounded cursor-pointer select-none ${mode === 'text' ? "bg-white text-black" : "bg-zinc-800"}`}>
                     <TextIcon size={18}/> Text
                 </button>
                 <label className={`flex-1 flex items-center justify-center gap-2 p-2 rounded cursor-pointer ${mode === 'media' ? "bg-white text-black" : "bg-zinc-800"}`}>

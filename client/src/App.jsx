@@ -47,6 +47,11 @@ const App = () => {
       eventSource.onmessage = (event) =>{
         const message = JSON.parse(event.data)
 
+        if (message.type === 'post_update') {
+          window.dispatchEvent(new CustomEvent('post_update', { detail: message }));
+          return;
+        }
+
         if(pathnameRef.current === ('/messages/' + message.from_user_id._id)){
           dispatch(addMessage(message))
         }else{

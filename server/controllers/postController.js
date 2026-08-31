@@ -2,6 +2,8 @@ import fs from 'fs';
 import imagekit from '../configs/imagekit.js';
 import Post from '../models/post.js';
 import User from '../models/User.js';
+import Comment from '../models/Comment.js';
+import { broadcast } from '../utils/sseManager.js';
 
 // Add post
 export const addPost= async (req,res) => {
@@ -75,15 +77,26 @@ export const likePost= async (req,res) => {
 
         const post = await Post.findById(postId)
 
+        let message = '';
         if(post.likes_count.includes(userId)){
             post.likes_count = post.likes_count.filter(user => user !== userId)
             await post.save()
-            res.json({success: true, message: 'Post Unliked'});
+            message = 'Post Unliked';
         }else{
             post.likes_count.push(userId)
             await post.save()
-            res.json({success:true, message: 'Post liked'});
+            message = 'Post liked';
         }
+
+        broadcast({
+            type: 'post_update',
+            postId: post._id,
+            updateType: 'like_toggled',
+            likes: post.likes_count,
+            comments_count: post.comments_count
+        });
+
+        res.json({success:true, message});
 
         
     } catch (error) {
@@ -150,6 +163,100 @@ export const deletePost = async (req, res) => {
 
         await Post.findByIdAndDelete(postId);
         res.json({success: true, message: 'Post deleted successfully'});
+    } catch (error) {
+        console.log(error);
+        res.json({success: false, message: error.message});
+    }
+}
+
+// Add comment
+export const addComment = async (req, res) => {
+    try {
+        const {userId} = req.auth();
+        const {postId, content} = req.body;
+
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.json({success: false, message: 'Post not found'});
+        }
+
+        const comment = new Comment({
+            post_id: postId,
+            author: userId,
+            content
+        });
+
+        await comment.save();
+
+        post.comments_count += 1;
+        await post.save();
+
+        const populatedComment = await Comment.findById(comment._id).populate('author', 'full_name username profile_picture');
+
+        broadcast({
+            type: 'post_update',
+            postId: post._id,
+            updateType: 'comment_added',
+            likes: post.likes_count,
+            comments_count: post.comments_count,
+            comment: populatedComment
+        });
+
+        res.json({success: true, message: 'Comment added successfully', comment});
+    } catch (error) {
+        console.log(error);
+        res.json({success: false, message: error.message});
+    }
+}
+
+// Get comments for a post
+export const getComments = async (req, res) => {
+    try {
+        const {postId} = req.params;
+        const comments = await Comment.find({post_id: postId})
+            .populate('author', 'full_name username profile_picture')
+            .sort({createdAt: -1}); // newest first (standard for feeds usually, or we can use 1 for oldest first. the prompt says "match how likes/existing lists are ordered elsewhere". The feed uses -1)
+            
+        res.json({success: true, comments});
+    } catch (error) {
+        console.log(error);
+        res.json({success: false, message: error.message});
+    }
+}
+
+// Delete comment
+export const deleteComment = async (req, res) => {
+    try {
+        const {userId} = req.auth();
+        const {commentId} = req.params;
+
+        const comment = await Comment.findById(commentId);
+        if (!comment) {
+            return res.json({success: false, message: 'Comment not found'});
+        }
+
+        if (comment.author !== userId) {
+            return res.json({success: false, message: 'Not authorized to delete this comment'});
+        }
+
+        await Comment.findByIdAndDelete(commentId);
+
+        const post = await Post.findById(comment.post_id);
+        if (post) {
+            post.comments_count -= 1;
+            await post.save();
+
+            broadcast({
+                type: 'post_update',
+                postId: post._id,
+                updateType: 'comment_deleted',
+                commentId: commentId,
+                likes: post.likes_count,
+                comments_count: post.comments_count
+            });
+        }
+
+        res.json({success: true, message: 'Comment deleted successfully'});
     } catch (error) {
         console.log(error);
         res.json({success: false, message: error.message});

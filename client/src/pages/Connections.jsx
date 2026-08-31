@@ -84,7 +84,7 @@ const Connections = () => {
         <div className='inline-flex flex-wrap items-center border border-gray-200 rounded-md p-1 bg-white shadow-sm'>
           {
             dataArray.map((tab) => (
-              <button onClickCapture={() => setCurrentTab(tab.label)} key={tab.label} className={`cursor-pointer flex items-center px-3 py-1 text-sm rounded-md transition-colors ${currentTab === tab.label ? 'bg-white font-medium text-black' : 'text-gray-500 hover:text-black'}`} onClick={() => setCurrentTab(tab.label)}>
+              <button onClickCapture={() => setCurrentTab(tab.label)} key={tab.label} className={`cursor-pointer select-none flex items-center px-3 py-1 text-sm rounded-md transition-colors ${currentTab === tab.label ? 'bg-white font-medium text-black' : 'text-gray-500 hover:text-black'}`} onClick={() => setCurrentTab(tab.label)}>
                 <tab.icon className='w-4 h-4'/>
                 <span className='ml-1'>{tab.label}</span>
                 {tab.count !== undefined && (
@@ -106,27 +106,27 @@ const Connections = () => {
                 <p className='text-sm text-gray-600'>{user.bio.slice(0,30)}...</p>
                 <div className='flex max-sm:flex-col gap-2 mt-4'>
                   {
-                    <button onClick={()=> navigate(`/profile/${user._id}`)} className='w-full p-2 text-sm rounded bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 active:scale-95 transition text-white cursor-pointer'>
+                    <button onClick={()=> navigate(`/profile/${user._id}`)} className='w-full p-2 text-sm rounded bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 active:scale-95 transition text-white cursor-pointer select-none'>
                       View Profile
                     </button>
                   }
                   {
                     currentTab === 'Following' && (
-                      <button onClick={()=> handleUnfollow(user._id)} className='w-full p-2 text-sm rounded bg-slate-100 hover:bg-slate-200 text-black active:scale-95 transition cursor-pointer'>
+                      <button onClick={()=> handleUnfollow(user._id)} className='w-full p-2 text-sm rounded bg-slate-100 hover:bg-slate-200 text-black active:scale-95 transition cursor-pointer select-none'>
                         Unfollow
                       </button>
                     )
                   }
                   {
                     currentTab === 'Pending' && (
-                      <button onClick={() => acceptConnection(user._id)} className='w-full p-2 text-sm rounded bg-slate-100 hover:bg-slate-200 text-black active:scale-95 transition cursor-pointer'>
+                      <button onClick={() => acceptConnection(user._id)} className='w-full p-2 text-sm rounded bg-slate-100 hover:bg-slate-200 text-black active:scale-95 transition cursor-pointer select-none'>
                         Accept
                       </button>
                     )
                   }
                   {
                     currentTab === 'Connections' && (
-                      <button onClick={() => navigate(`/messages/${user._id}`)} className='w-full p-2 text-sm rounded bg-slate-100 hover:bg-slate-200 text-slate-800 active:scale-95 transition cursor-pointer flex items-center justify-center gap-1'>
+                      <button onClick={() => navigate(`/messages/${user._id}`)} className='w-full p-2 text-sm rounded bg-slate-100 hover:bg-slate-200 text-slate-800 active:scale-95 transition cursor-pointer select-none flex items-center justify-center gap-1'>
                         <MessageSquare className='w-4 h-4'/>
                         Message
                       </button>

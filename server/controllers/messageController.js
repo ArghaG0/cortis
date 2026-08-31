@@ -1,9 +1,7 @@
 import fs from 'fs';
 import imagekit from '../configs/imagekit.js';
 import Message from '../models/Message.js';
-
-// create an empty object to store ss event connections
-const connections = {};
+import { registerConnection, pushToUser } from '../utils/sseManager.js';
 
 //controller function for the sse endpoint
 export const sseController = (req,res) => {
@@ -16,18 +14,8 @@ export const sseController = (req,res) => {
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
-    // add the client's response object to the connection object
-    connections[userId] = res
-
-    // send an initial event to the client
-    res.write('log: Connected to SSE stream \n\n');
-
-    // handle client disconnection
-    req.on('close', () =>{
-        //remove the client's response object from the connections array
-        delete connections[userId];
-        console.log('Client disconnected');
-    })
+    // add the client to the sseManager
+    registerConnection(req, res, userId);
 }
 
 // send message
@@ -67,12 +55,8 @@ export const sendMessage = async (req,res) => {
         res.json({success: true, message})
 
         // send message to to_user_id using sse
-
         const messageWithUserData = await Message.findById(message._id).populate('from_user_id');
-
-        if(connections[to_user_id]){
-            connections[to_user_id].write(`data: ${JSON.stringify(messageWithUserData)}\n\n`)
-        }
+        pushToUser(to_user_id, messageWithUserData);
 
     } catch (error) {
         console.log(error);

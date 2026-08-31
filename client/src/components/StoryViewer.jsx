@@ -79,7 +79,7 @@ const StoryViewer = ({viewStory, setViewStory}) => {
         </div>
 
         {/* close button */}
-        <button onClick={handleClose} className='absolute top-4 right-4 text-white text-3xl font-bold focus:outline-none'>
+        <button onClick={handleClose} className='absolute top-4 right-4 text-white text-3xl font-bold focus:outline-none select-none cursor-pointer'>
             <X className='w-8 h-8 hover:scale-110 transition cursor-pointer'/>
         </button>
 

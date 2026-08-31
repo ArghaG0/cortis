@@ -18,9 +18,9 @@ const Layout = () => {
       </div>
       {
         sidebarOpen ?
-        <X className='absolute top-3 right-3 p-2 z-100 bg-white rounded-md shadow w-10 h-10 text-gray-600 sm:hidden' onClick={()=> setSidebarOpen(false)}/>
+        <X className='absolute top-3 right-3 p-2 z-100 bg-white rounded-md shadow w-10 h-10 text-gray-600 sm:hidden select-none cursor-pointer' onClick={()=> setSidebarOpen(false)}/>
         :
-        <Menu className='absolute top-3 right-3 p-2 z-100 bg-white rounded-md shadow w-10 h-10 text-gray-600 sm:hidden' onClick={()=> setSidebarOpen(true)}/>
+        <Menu className='absolute top-3 right-3 p-2 z-100 bg-white rounded-md shadow w-10 h-10 text-gray-600 sm:hidden select-none cursor-pointer' onClick={()=> setSidebarOpen(true)}/>
       }
     </div>
   ) : (

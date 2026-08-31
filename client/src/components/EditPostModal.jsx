@@ -37,7 +37,7 @@ const EditPostModal = ({ post, isOpen, onClose, onPostUpdated }) => {
             <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold text-slate-800">Edit Post</h2>
-                    <button onClick={onClose} className="text-slate-500 hover:text-slate-700 cursor-pointer">
+                    <button onClick={onClose} className="text-slate-500 hover:text-slate-700 cursor-pointer select-none">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
@@ -52,14 +52,14 @@ const EditPostModal = ({ post, isOpen, onClose, onPostUpdated }) => {
                 <div className="flex justify-end mt-4">
                     <button 
                         onClick={onClose}
-                        className="mr-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition cursor-pointer"
+                        className="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-md transition-colors cursor-pointer select-none"
                     >
                         Cancel
                     </button>
                     <button 
                         onClick={handleUpdate}
                         disabled={loading}
-                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition disabled:opacity-50 cursor-pointer"
+                        className="px-4 py-2 text-sm font-medium text-white bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 rounded-md transition-colors cursor-pointer select-none disabled:opacity-50"
                     >
                         {loading ? 'Saving...' : 'Save Changes'}
                     </button>

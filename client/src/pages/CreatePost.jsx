@@ -75,7 +75,7 @@ const CreatePost = () => {
               {images.map((image, i) =>(
                 <div key={i} className='relative group'>
                   <img src={URL.createObjectURL(image)} className='h-20 rounded-md' alt="" />
-                  <div onClick={() => setImages(images.filter((_, index)=> index !== i))} className='absolute hidden group-hover:flex justify-center items-center top-0 right-0 bottom-0 left-0 bg-black/40 rounded-md cursor-pointer'>
+                  <div onClick={() => setImages(images.filter((_, index)=> index !== i))} className='absolute hidden group-hover:flex justify-center items-center top-0 right-0 bottom-0 left-0 bg-black/40 rounded-md cursor-pointer select-none'>
                     <X className='w-6 h-6 text-white'/>
                   </div>
                 </div>

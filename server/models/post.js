@@ -9,7 +9,8 @@ const postSchema= new mongoose.Schema({
     }],
     post_type: {type: String, enum: ['text', 'image', 'text_with_image'], required: true},
     likes_count: [{type: String, ref: 'User'}],
-    isEdited: {type: Boolean, default: false}
+    isEdited: {type: Boolean, default: false},
+    comments_count: {type: Number, default: 0}
 }, {timestamps: true, minimize: false})
 
 const post = mongoose.model('Post',postSchema)
